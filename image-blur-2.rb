@@ -10,29 +10,38 @@ class Image
     end
   end
 
-  def blur(x,y)
-    [x,y].each do |a,b|
-      if a>=array.length || b>=array.length
-        puts "Input is greater than array size."
-        next
-      else
-        array[a][b]=1
-        array[a-1][b]=1 unless a == 0
-        array[a+1][b]=1 unless a >= array.length-1
-        array[a][b-1]=1 unless b == 0
-        array[a][b+1]=1 unless b >= array.length-1
-      end
+  def blur
+    find_ones.each do |a,b|
+      array[a-1][b]=1 unless a == 0
+      array[a+1][b]=1 unless a >= array.length-1
+      array[a][b-1]=1 unless b == 0
+      array[a][b+1]=1 unless b >= array.length-1
     end
   end
+
+  def find_ones
+    coordinates = Array.new
+    @array.each_index do |row|
+      subarray = @array[row]
+      subarray.each_index do |col|
+        if @array[row][col] == 1
+          coordinates << [row,col]
+        end
+      end
+    end
+    coordinates
+  end
+
+
 end
 
 
 image = Image.new([
   [0, 0, 0, 0],
+  [0, 1, 0, 0],
   [0, 0, 0, 0],
-  [0, 0, 0, 0],
-  [0, 0, 0, 0]
+  [0, 0, 0, 1]
 ])
-image.blur([0,0],[4,3])
+p image.find_ones
+image.blur
 image.output_image
-puts image.array.length
