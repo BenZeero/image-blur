@@ -10,12 +10,14 @@ class Image
     end
   end
 
-  def blur
-    find_ones.each do |row,col|
-      array[row-1][col]=1 unless row == 0
-      array[row+1][col]=1 unless row >= array.length-1
-      array[row][col-1]=1 unless col == 0
-      array[row][col+1]=1 unless col >= array.length-1
+  def blur(radius=1)
+    radius.times do
+      find_ones.each do |row,col|
+        array[row-1][col]=1 unless row == 0
+        array[row+1][col]=1 unless row >= array.length-1
+        array[row][col-1]=1 unless col == 0
+        array[row][col+1]=1 unless col >= array[0].length-1
+      end
     end
   end
 
@@ -37,11 +39,13 @@ end
 
 
 image = Image.new([
-  [0, 0, 0, 0],
-  [0, 1, 0, 0],
-  [0, 0, 0, 0],
-  [0, 0, 0, 1]
+  [0, 0, 0, 0, 0],
+  [0, 1, 0, 0, 0],
+  [0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0],
+  [0, 0, 1, 1, 0]
 ])
 p image.find_ones
-image.blur
+image.blur(4)
 image.output_image
