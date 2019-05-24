@@ -13,12 +13,32 @@ class Image
   def blur(radius=1)
     radius.times do
       find_ones.each do |row,col|
-        array[row-1][col]=1 unless row == 0
-        array[row+1][col]=1 unless row >= array.length-1
-        array[row][col-1]=1 unless col == 0
-        array[row][col+1]=1 unless col >= array[0].length-1
+        pixel_blur(row,col)
       end
     end
+  end
+
+  def pixel_blur(row,col)
+    directions = [pixel_north(row,col), pixel_south(row,col), pixel_east(row,col), pixel_west(row,col)]
+    directions.each do |direction|
+      direction
+    end
+  end  
+
+  def pixel_north(row,col)
+    array[row-1][col]=1 if row-1 != 0 && col <= array[row-1].length-1
+  end
+
+  def pixel_south(row,col)
+    array[row+1][col]=1 if row+1 <= array.length-1 && col <= array[row+1].length-1 
+  end
+
+  def pixel_east(row,col)
+    array[row][col+1]=1 unless col >= array[0].length-1
+  end
+
+  def pixel_west(row,col)
+    array[row][col-1]=1 unless col == 0
   end
 
   def find_ones
@@ -39,13 +59,24 @@ end
 
 
 image = Image.new([
-  [0, 0, 0, 0, 0],
-  [0, 1, 0, 0, 0],
-  [0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0],
-  [0, 0, 1, 1, 0]
+  [0, 0, 0, 0],
+  [0, 0, 0, 0],
+  [0, 0, 0, 0],
+  [0, 1, 0, 0],
+  [0, 0, 0, 0],
+  [0, 0, 0, 0]
 ])
 p image.find_ones
-image.blur(4)
+image.blur(2)
 image.output_image
+actual = image.array
+expected = 
+[
+  [0, 0, 0, 0],
+  [0, 1, 0, 0],
+  [1, 1, 1, 0],
+  [1, 1, 1, 1],
+  [1, 1, 1, 0],
+  [0, 1, 0, 0]
+]
+puts expected==actual
